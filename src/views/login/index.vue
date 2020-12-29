@@ -5,7 +5,14 @@
         <a href="/edu-boss-fed/#/" class="router-link-active" tabindex="-1">Edu boss管理系统</a>
       </h1>
     </header>
-    <el-form class="login-form" label-position="top" ref="form" :rules="rules" :model="form" label-width="80px">
+    <el-form
+      class="login-form"
+      label-position="top"
+      ref="form"
+      :rules="rules"
+      :model="form"
+      label-width="80px"
+    >
       <h2>登录</h2>
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone"></el-input>
@@ -14,7 +21,9 @@
         <el-input type="password" v-model="form.password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="login-btn" type="primary" @click="onSubmit" :loading="isLogining">登录</el-button>
+        <el-button class="login-btn" type="primary" @click="onSubmit" :loading="isLogining"
+          >登录</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -60,13 +69,16 @@ export default Vue.extend({
           this.$message.error(data.message)
         } else {
           // 登录成功
+          // 将用户状态保存到vuex中
+          this.$store.commit('setUser', data.content)
           this.$router.push('/')
           this.$message.success('登录成功')
         }
       } catch (error) {
         console.log(error, '登陆失败')
+      } finally {
+        this.isLogining = false
       }
-      this.isLogining = false
     }
   }
 })

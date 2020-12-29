@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Layout from '@/layout/index.vue'
+import store from '@/store'
 Vue.use(VueRouter)
 
 // 路由配置规则
@@ -13,6 +14,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     component: Layout,
+    name: 'Layout',
     children: [
       {
         path: '', // 默认子路由
@@ -22,7 +24,18 @@ const routes: Array<RouteConfig> = [
       {
         path: '/role',
         name: 'role',
-        component: () => import(/* webpackChunkName: 'role' */ '@/views/role/index.vue')
+        component: () => import(/* webpackChunkName: 'role' */ '@/views/role/index.vue'),
+
+        children: [
+          {
+            path: 'test',
+            name: 'test',
+            component: () => import(/* webpackChunkName: 'role' */ '@/views/role/index.vue'),
+            meta: {
+              requiresAuth: true
+            }
+          }
+        ]
       },
       {
         path: '/menu',
@@ -52,7 +65,8 @@ const routes: Array<RouteConfig> = [
       {
         path: '/advert-space',
         name: 'advert-space',
-        component: () => import(/* webpackChunkName: 'advert-space' */ '@/views/advert-space/index.vue')
+        component: () =>
+          import(/* webpackChunkName: 'advert-space' */ '@/views/advert-space/index.vue')
       }
     ]
   },
@@ -65,6 +79,37 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
   routes
+})
+
+// 全局前置守卫：任何页面的访问都要经过这里
+// to：要去哪里的路由信息
+// from：从哪里来的路由信息
+// next：通行的标志
+router.beforeEach((to, from, next) => {
+  // to.matched 是一个数组（匹配到是路由记录), 会匹配到to去往的那个路由的及其所有的祖先路由
+  // 如果路由的meta标签上写了requiresAuth: true，则这个路由及其自路由只有登录才能访问。如果没写，则都可以访问
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.state.user) {
+      // 跳转到登录页面
+      next({
+        name: 'login',
+        query: {
+          // 通过 url 传递查询字符串参数
+          redirect: to.fullPath // 把登录成功需要返回的页面告诉登录页面
+        }
+      })
+    } else {
+      next() // 允许通过
+    }
+  } else {
+    next() // 允许通过
+  }
+
+  // // 路由守卫中一定要调用 next，否则页码无法展示
+  // next()
+  // if (to.path !== '/login') {
+  //   // 校验登录状态
+  // }
 })
 
 export default router

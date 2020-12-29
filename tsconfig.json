@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "allowJs": true, // tsconfig.json中要写
+    "checkJs": true, // 这个是主要的
     "target": "esnext",
     "module": "esnext",
     "strict": true,
