@@ -11,7 +11,19 @@ module.exports = {
       // `scss` 语法会要求语句结尾必须有分号，`sass` 则要求必须没有分号
       // 在这种情况下，我们可以使用 `scss` 选项，对 `scss` 语法进行单独配置
       scss: {
-        prependData: '@import \'~@/styles/index.scss\';'
+        prependData: "@import '~@/styles/index.scss';"
+      }
+    }
+  },
+  devServer: {
+    proxy: {
+      '/boss': {
+        target: 'http://eduboss.lagou.com', // 设置请求头中的 host 为 target，防⽌后端反向代理服务器⽆法识别
+        changeOrigin: true
+      },
+      '/front': {
+        target: 'http://edufront.lagou.com',
+        changeOrigin: true // 设置请求头中的 host 为 target，防⽌后端反向代理服务器⽆法识别
       }
     }
   }
