@@ -174,3 +174,16 @@ export default class YourComponent extends Vue {
 > 装饰器语法还没有正式发布，建议了解即可，正式发布之后在选择使用也可。
 
 使用 options APIs 最好是使用 `export default Vue.extends({...})` 而不是 `export default {...}`
+
+
+
+
+
+interface 报错
+
+```js
+Expected a semicolon  @typescript-eslint/member-delimiter-style
+```
+
+暂未解决
+

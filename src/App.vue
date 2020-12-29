@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <h1>App.vue</h1>
     <router-view />
-
-    <div class="text">hello world</div>
+    <!-- <div class="text">hello world</div> -->
   </div>
 </template>
 <script>
