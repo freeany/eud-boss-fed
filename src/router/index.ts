@@ -23,24 +23,34 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: '/role',
-        name: 'role',
-        component: () => import(/* webpackChunkName: 'role' */ '@/views/role/index.vue'),
-
+        redirect: '/role/index',
+        meta: {
+          requiresAuth: true
+        },
         children: [
+          {
+            path: '/role/index',
+            name: 'role',
+            component: () => import(/* webpackChunkName: 'role' */ '@/views/role/index.vue')
+          },
           {
             path: 'test',
             name: 'test',
-            component: () => import(/* webpackChunkName: 'role' */ '@/views/role/index.vue'),
-            meta: {
-              requiresAuth: true
-            }
+            component: () => import(/* webpackChunkName: 'role' */ '@/views/role/test.vue')
           }
         ]
       },
       {
         path: '/menu',
         name: 'menu',
-        component: () => import(/* webpackChunkName: 'menu' */ '@/views/menu/index.vue')
+        component: () => import(/* webpackChunkName: 'menu' */ '@/views/menu/index.vue'),
+        children: [
+          {
+            path: 'create',
+            name: 'menu-create',
+            component: () => import(/* webpackChunkName: 'menu-create' */ '@/views/menu/create.vue')
+          }
+        ]
       },
       {
         path: '/resource',
@@ -65,8 +75,7 @@ const routes: Array<RouteConfig> = [
       {
         path: '/advert-space',
         name: 'advert-space',
-        component: () =>
-          import(/* webpackChunkName: 'advert-space' */ '@/views/advert-space/index.vue')
+        component: () => import(/* webpackChunkName: 'advert-space' */ '@/views/advert-space/index.vue')
       }
     ]
   },
@@ -87,7 +96,7 @@ const router = new VueRouter({
 // next：通行的标志
 router.beforeEach((to, from, next) => {
   // to.matched 是一个数组（匹配到是路由记录), 会匹配到to去往的那个路由的及其所有的祖先路由
-  // 如果路由的meta标签上写了requiresAuth: true，则这个路由及其自路由只有登录才能访问。如果没写，则都可以访问
+  // 如果路由的meta标签上写了requiresAuth: true，则这个路由及其子路由只有登录才能访问。如果没写，则都可以访问
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!store.state.user) {
       // 跳转到登录页面
@@ -104,12 +113,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next() // 允许通过
   }
-
-  // // 路由守卫中一定要调用 next，否则页码无法展示
-  // next()
-  // if (to.path !== '/login') {
-  //   // 校验登录状态
-  // }
 })
 
 export default router

@@ -5,14 +5,7 @@
         <a href="/edu-boss-fed/#/" class="router-link-active" tabindex="-1">Edu boss管理系统</a>
       </h1>
     </header>
-    <el-form
-      class="login-form"
-      label-position="top"
-      ref="form"
-      :rules="rules"
-      :model="form"
-      label-width="80px"
-    >
+    <el-form class="login-form" label-position="top" ref="form" :rules="rules" :model="form" label-width="80px">
       <h2>登录</h2>
       <el-form-item label="手机号" prop="phone">
         <el-input v-model="form.phone"></el-input>
@@ -21,9 +14,7 @@
         <el-input type="password" v-model="form.password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="login-btn" type="primary" @click="onSubmit" :loading="isLogining"
-          >登录</el-button
-        >
+        <el-button class="login-btn" type="primary" @click="onSubmit" :loading="isLogining">登录</el-button>
       </el-form-item>
     </el-form>
 
@@ -60,7 +51,7 @@ export default Vue.extend({
   },
   methods: {
     async onSubmit() {
-      this.isLogining = true
+      this.isLogining = true // 登陆时网速过慢不允许重复点击的问题, 登录按钮上添加:loading="isLogining"
       try {
         await (this.$refs.form as Form).validate() // 表单校验的方法返回promise，失败则抛出异常
         const { data } = await login(this.form)
@@ -71,7 +62,7 @@ export default Vue.extend({
           // 登录成功
           // 将用户状态保存到vuex中
           this.$store.commit('setUser', data.content)
-          this.$router.push('/')
+          this.$router.push((this.$route.query.redirect as string) || '/')
           this.$message.success('登录成功')
         }
       } catch (error) {

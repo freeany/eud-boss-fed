@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      <ul>
+        <li class="red">红灯</li>
+        <li class="green">绿灯</li>
+        <li class="yellow">黄灯</li>
+      </ul>
+    </div>
+    <script>
+      function clickHandler(color) {
+        const el = document.querySelector(`.${color}`)
+        if (!el) return alert('没有该元素')
+        let clicking = false
+        if (color === 'yellow') {
+          el.addEventListener('click', () => {
+            // 避免重复点击
+            if (!clicking) {
+              clicking = true
+              let i = 0
+              const id = setInterval(() => {
+                el.style.color === color
+                  ? ((el.style.color = 'gray'), (el.style.fontSize = '16px'))
+                  : ((el.style.color = color), (el.style.fontSize = '24px'))
+                i++
+                // 闪烁三次
+                if (i === 6) {
+                  clicking = false
+                  clearInterval(id)
+                }
+              }, 500)
+            }
+          })
+        } else {
+          el.addEventListener('click', () => {
+            console.log(el.style.color)
+            el.style.color === color ? (el.style.color = 'gray') : (el.style.color = color)
+          })
+        }
+      }
+
+      clickHandler('red')
+      clickHandler('green')
+      clickHandler('yellow')
+    </script>
+  </body>
+</html>

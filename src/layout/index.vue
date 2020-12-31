@@ -2,13 +2,16 @@
   <div class="Layout">
     <el-container>
       <el-aside>
+        <!-- 左侧边栏 - 保持 -->
         <app-aside></app-aside>
       </el-aside>
       <el-container>
         <el-header>
+          <!-- 头部 - 保持 -->
           <app-header></app-header>
         </el-header>
         <el-main>
+          <!-- 路由的内容 - 随路由的变化而变化 -->
           <router-view />
         </el-main>
       </el-container>
